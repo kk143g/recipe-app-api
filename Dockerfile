@@ -22,6 +22,8 @@ RUN python -m venv /py && \
         then /py/bin/pip install -r /tmp/requirements.dev.txt ; \
     fi && \
     rm -rf /tmp && \
+    # This removes the not required packages,
+    # Which only were required to install pstgresql
     apk del .tmp-build-deps && \
     adduser \
         --disabled-password \
