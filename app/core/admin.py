@@ -53,3 +53,5 @@ class UserAdmin(BaseUserAdmin):
 # This will display the user on Django admin panel
 admin.site.register(models.User, UserAdmin)
 admin.site.register(models.Recipe)
+admin.site.register(models.Tag)
+admin.site.register(models.Ingredient)

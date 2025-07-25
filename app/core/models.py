@@ -60,9 +60,36 @@ class Recipe(models.Model):
     time_minutes = models.IntegerField()
     price = models.DecimalField(max_digits=5, decimal_places=2)
     link = models.CharField(max_length=255, blank=True)
+    # Many to Many relationship with tags
+    # Means any tag is associated with any recipe
+    # And any recipe is associated with any tag
+    tags = models.ManyToManyField('Tag')
+    ingredients = models.ManyToManyField('Ingredient')
 
 # This function will be helful to 
 # display recipe name on admin apnel
 # Otherwise Id will be displayed
     def __str__(self):
         return self.title
+    
+class Tag(models.Model):
+    """Tag for filtering recipes."""
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.name
+    
+class Ingredient(models.Model):
+    """Ingredients for recipe."""
+    name = models.CharField(max_length=255)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.name
