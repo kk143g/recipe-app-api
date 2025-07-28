@@ -7,7 +7,9 @@ ENV PYTHONUNBUFFERED=1
 
 COPY ./requirements.txt /tmp/requirements.txt
 COPY ./requirements.dev.txt /tmp/requirements.dev.txt
-#COPY ./scripts /scripts
+# This directory will have scripts which 
+# will be run by our docker application
+COPY ./scripts /scripts
 COPY ./app /app
 WORKDIR /app
 
@@ -25,6 +27,7 @@ RUN python -m venv /py && \
     # build-base → C compiler, make, etc.
     # postgresql-dev, musl-dev → headers to compile PostgreSQL libs
     # zlib → for image/compression libraries
+    # linux-headers is requirement to install uWSKI server pckg
     apk add --update --no-cache --virtual .tmp-build-deps \
         build-base postgresql-dev musl-dev zlib zlib-dev linux-headers && \
     /py/bin/pip install -r /tmp/requirements.txt && \
@@ -33,6 +36,7 @@ RUN python -m venv /py && \
     fi && \
     rm -rf /tmp && \
     # This removes the not required packages,
+    # To keep docker image lightweight and clean
     # Which only were required to install pstgresql
     apk del .tmp-build-deps && \
     adduser \
@@ -43,12 +47,12 @@ RUN python -m venv /py && \
     mkdir -p /vol/web/media && \
     mkdir -p /vol/web/static && \
     chown -R django-user:django-user /vol && \
-    chmod -R 755 /vol
-    # chmod -R +x /scripts
+    chmod -R 755 /vol && \
+    # So that scripts can be executable
+    chmod -R +x /scripts
 
-ENV PATH="/py/bin:$PATH"
-# ENV PATH="/scripts:/py/bin:$PATH"
+ENV PATH="/scripts:/py/bin:$PATH"
 
 USER django-user
-
-#CMD ["run.sh"]
+# Name of the script we create
+CMD ["run.sh"]
