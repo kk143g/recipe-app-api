@@ -20,11 +20,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
 from core.models import (
-    Recipe, 
+    Recipe,
     Tag,
     Ingredient,
 )
 from recipe import serializers
+
 
 # This will display the description on Swagger GUI
 # It will display that tags OpenApiTypes.STR string type you can pass
@@ -44,7 +45,6 @@ from recipe import serializers
         ]
     )
 )
-
 # Using viewset so that it gives us CRUD (create, read, Update, Delete)
 class RecipeViewSet(viewsets.ModelViewSet):
     """View for manage recipe APIs."""
@@ -75,16 +75,16 @@ class RecipeViewSet(viewsets.ModelViewSet):
         return queryset.filter(
             user=self.request.user
         ).order_by('-id').distinct()
-    
+
     def get_serializer_class(self):
         """Return the serializer class for request."""
         if self.action == 'list':
             return serializers.RecipeSerializer
         elif self.action == 'upload_image':
             return serializers.RecipeImageSerializer
-        
+
         return self.serializer_class
-    
+
     def perform_create(self, serializer):
         """Create a new recipe."""
         serializer.save(user=self.request.user)
@@ -98,10 +98,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(recipe, data=request.data)
 
         if serializer.is_valid():
-            serializer.save() # It will save image to db
+            serializer.save()  # It will save image to db
             return Response(serializer.data, status=status.HTTP_200_OK)
-        
+
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 # This will display the description on Swagger GUI
 # It will display that tags OpenApiTypes.INT integer type you can pass
@@ -110,14 +111,14 @@ class RecipeViewSet(viewsets.ModelViewSet):
         parameters=[
             OpenApiParameter(
                 'assigned_only',
-                OpenApiTypes.INT, enum=[0,1],
+                OpenApiTypes.INT, enum=[0, 1],
                 description='Filter by items assigned to recipes.',
             ),
         ]
     )
 )
-class BaseRecipeAttrViewSet(mixins.DestroyModelMixin, 
-                            mixins.UpdateModelMixin, 
+class BaseRecipeAttrViewSet(mixins.DestroyModelMixin,
+                            mixins.UpdateModelMixin,
                             mixins.ListModelMixin,
                             viewsets.GenericViewSet):
     authentication_classes = [TokenAuthentication]
@@ -131,7 +132,7 @@ class BaseRecipeAttrViewSet(mixins.DestroyModelMixin,
         queryset = self.queryset
         if assigned_only:
             queryset = queryset.filter(recipe__isnull=False)
-        
+
         return queryset.filter(
             user=self.request.user
         ).order_by('-name').distinct()

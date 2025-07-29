@@ -13,7 +13,7 @@ from core.models import (
 
 class IngredientSerializer(serializers.ModelSerializer):
     """Serializer for ingredients."""
-    
+
     class Meta:
         model = Ingredient
         fields = ['id', 'name']
@@ -37,10 +37,17 @@ class RecipeSerializer(serializers.ModelSerializer):
     # By default nested serializers are read-only
     tags = TagSerializer(many=True, required=False)
     ingredients = IngredientSerializer(many=True, required=False)
-    
+
     class Meta:
         model = Recipe
-        fields = ['id', 'title', 'time_minutes', 'price', 'link', 'tags', 'ingredients']
+        fields = ['id',
+                  'title',
+                  'time_minutes',
+                  'price',
+                  'link',
+                  'tags',
+                  'ingredients'
+                  ]
         read_only_fields = ['id']
 
     def _get_or_create_tags(self, tags, recipe):
@@ -73,12 +80,14 @@ class RecipeSerializer(serializers.ModelSerializer):
         self._get_or_create_ingredients(ingredients, recipe)
 
         return recipe
-    
+
     def update(self, instance, validated_data):
         """Update recipe."""
-        # Because tags/ingredients is a many-to-many field with a nested serializer — 
+        # Because tags/ingredients is a many-to-many
+        # field with a nested serializer —
         # not a simple attribute.
-        # DRF doesn’t auto-handle writable nested many-to-many fields, so you:
+        # DRF doesn’t auto-handle writable
+        # nested many-to-many fields, so you:
         tags = validated_data.pop('tags', None)
         if tags is not None:
             instance.tags.clear()
@@ -112,5 +121,3 @@ class RecipeImageSerializer(serializers.ModelSerializer):
         fields = ['id', 'image']
         read_only_fields = ['id']
         extra_kwargs = {'image': {'required': 'True'}}
-
-        

@@ -18,7 +18,7 @@ from rest_framework import status
 from rest_framework.test import APIClient
 
 from core.models import (
-    Recipe, 
+    Recipe,
     Tag,
     Ingredient,
 )
@@ -332,7 +332,10 @@ class PrivateRecipeApiTests(TestCase):
 
     def create_recipe_with_exsting_ingredients(self):
         """Create recipe with exisitng ingredient."""
-        ingredient_lettuce = Ingredient.objects.create(user=self.user, name='Lettuce')
+        ingredient_lettuce = Ingredient.objects.create(
+            user=self.user,
+            name='Lettuce'
+        )
         payload = {
             'title': 'Thai Prawn Curry',
             'time_minutes': 30,
@@ -347,7 +350,8 @@ class PrivateRecipeApiTests(TestCase):
         recipe = recipes[0]
         self.assertTrue(recipe.ingredients.count(), 2)
 
-        # Assert in will check if provided ingredient includes in recipe all ingredients
+        # Assert in will check if provided
+        # ingredient includes in recipe all ingredients
         self.assertIn(ingredient_lettuce, recipe.ingredients.all())
 
         for ingredient in payload['ingredients']:
@@ -373,11 +377,17 @@ class PrivateRecipeApiTests(TestCase):
 
     def test_update_recipe_assign_ingredient(self):
         """Test assigning an existing ingredient when updating a recipe."""
-        ingredient_lettuce = Ingredient.objects.create(user=self.user, name='Lettuce')
+        ingredient_lettuce = Ingredient.objects.create(
+            user=self.user,
+            name='Lettuce'
+        )
         recipe = create_recipe(user=self.user)
         recipe.ingredients.add(ingredient_lettuce)
 
-        ingredient_pepper = Ingredient.objects.create(user=self.user, name='Pepper')
+        ingredient_pepper = Ingredient.objects.create(
+            user=self.user,
+            name='Pepper'
+        )
         payload = {
             'ingredients': [{'name': 'Pepper'}],
         }
@@ -466,7 +476,7 @@ class ImageUploadTests(TestCase):
         """Test uplaoding an image to a recipe."""
         url = image_upload_url(self.recipe.id)
         with tempfile.NamedTemporaryFile(suffix='.jpg') as image_file:
-            img = Image.new('RGB', (10,10))
+            img = Image.new('RGB', (10, 10))
             img.save(image_file, format='JPEG')
             image_file.seek(0)
             payload = {'image': image_file}

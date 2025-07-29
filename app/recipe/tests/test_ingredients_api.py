@@ -87,7 +87,7 @@ class PrivatedIngredientsApiTests(TestCase):
 
         payload = {'name': 'Coriandor'}
         url = details_url(ingredient.id)
-        res= self.client.patch(url, payload)
+        res = self.client.patch(url, payload)
 
         self.assertEqual(res.status_code, status.HTTP_200_OK)
 
@@ -104,7 +104,7 @@ class PrivatedIngredientsApiTests(TestCase):
         self.assertEqual(res.status_code, status.HTTP_204_NO_CONTENT)
         ingredient = Ingredient.objects.filter(user=self.user)
         self.assertFalse(ingredient.exists())
-        
+
     def test_filter_ingredients_assigned_to_recipes(self):
         """Test listing ingredients by those assigned to recipe."""
         ing1 = Ingredient.objects.create(user=self.user, name='Ingredient 1')
@@ -118,7 +118,7 @@ class PrivatedIngredientsApiTests(TestCase):
         )
 
         recipe.ingredients.add(ing1)
-        
+
         res = self.client.get(INGREDIENTS_URL, {'assigned_only': 1})
 
         s1 = IngredientSerializer(ing1)

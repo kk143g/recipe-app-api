@@ -57,6 +57,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     # Replaces default username with email
     USERNAME_FIELD = 'email'
 
+
 class Recipe(models.Model):
     """Recipe object."""
     # Adding relation with user
@@ -78,12 +79,13 @@ class Recipe(models.Model):
     ingredients = models.ManyToManyField('Ingredient')
     image = models.ImageField(null=True, upload_to=recipe_image_file_path)
 
-# This function will be helful to 
+# This function will be helful to
 # display recipe name on admin apnel
 # Otherwise Id will be displayed
     def __str__(self):
         return self.title
-    
+
+
 class Tag(models.Model):
     """Tag for filtering recipes."""
     name = models.CharField(max_length=255)
@@ -94,7 +96,8 @@ class Tag(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+
 class Ingredient(models.Model):
     """Ingredients for recipe."""
     name = models.CharField(max_length=255)

@@ -120,7 +120,7 @@ class PrivateTagsApiTests(TestCase):
         )
 
         recipe.tags.add(tag1)
-        
+
         res = self.client.get(TAGS_URL, {'assigned_only': 1})
 
         s1 = TagSerializer(tag1)

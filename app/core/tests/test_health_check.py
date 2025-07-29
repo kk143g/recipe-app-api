@@ -19,4 +19,3 @@ class HealthCheckTests(TestCase):
         res = client.get(url)
 
         self.assertTrue(res.status_code, status.HTTP_200_OK)
-        

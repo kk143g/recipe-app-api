@@ -23,7 +23,7 @@ class CreateTokenView(ObtainAuthToken):
     renderer_classes = api_settings.DEFAULT_RENDERER_CLASSES
 
 
-# RetrieveUpdateAPIView is provided by Django 
+# RetrieveUpdateAPIView is provided by Django
 # to retrieve and update API
 class ManageUserView(generics.RetrieveUpdateAPIView):
     """Manage the authenticated user."""
